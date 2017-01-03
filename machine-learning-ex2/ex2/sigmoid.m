@@ -2,6 +2,7 @@ function g = sigmoid(z)
 %SIGMOID Compute sigmoid function
 %   g = SIGMOID(z) computes the sigmoid of z.
 
+
 % You need to return the following variables correctly
 A = size(z);
 g = zeros(A);
