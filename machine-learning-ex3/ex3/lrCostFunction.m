@@ -36,26 +36,60 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
-%sum(z(2:end).^2)
+% Unvectorised expression of cost function.
+
 % 
 % for i = 1:m
 % 
 %     J = J + (-y(i) * log(sigmoid(sum(theta'.*X(i,:)))) - ...
 %             (1 - y(i)) * log(1 - sigmoid(sum(theta'.*X(i,:)))) ); 
 % end
-% 
-% J = J / m;
+%  
+% J = J / m
 
-a = sum(-y.*log(sigmoid(X * theta)))
-b = sum((1 - y).*log(1 - sigmoid(X * theta)))
+% Vectorised version of cost function.
 
-J = (a - b) / m
+a = sum(-y.*log(sigmoid(X * theta)));
+b = sum((1 - y).*log(1 - sigmoid(X * theta)));
+
+J = (a - b) / m;
 
 %J = ((-y' * log(sigmoid(X * theta))) - ...
 %    (1 - y') * log(1 - sigmoid(X * theta))) / m
 
-sigmoid(X * theta) - y
+% Adding regularisation expression to cost function by adding all the theta
+% terms (apart from theta 0) squared * (lambda / (2*m))
 
+J = J + (lambda / (2*m) * (sum(theta(2:end).^2)));
+
+% Unvectorised expression of theta gradient.
+
+% for theta_ind = 1:length(grad)
+%     
+%     theta_val = 0;
+% 
+%     for i = 1:m
+% 
+%         theta_val = theta_val + (sigmoid(sum(theta'.*X(i,:))) - y(i)) * X(i, theta_ind);
+%     end
+%     
+%     grad(theta_ind) = theta_val / m;
+% end
+
+% This vectorised function sums all the rows of X having multiplied the
+% values element wise with theta to produce a column vector of length m.
+% This is then run through sigmoid to prouduce a similar column vector of
+% length m. We then minus the expected y value to get another similar
+% column vector. Take X transpose (number of features by m in dimensions)
+% and multiply it by this column vector using "*" produces the three
+% gradient values for theta by element wise multiplication and sumation.
+
+grad = (X'*(sigmoid(X * theta) - y)) / m;
+
+% Adding regularisation by adding lambda / m * theta j to all values of
+% gradient apart from theta 0.
+
+grad(2:end) = grad(2:end) + (lambda / m) * theta(2:end);
 
 
 % =============================================================
