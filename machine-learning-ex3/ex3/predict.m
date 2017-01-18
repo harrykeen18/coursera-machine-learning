@@ -19,14 +19,18 @@ p = zeros(size(X, 1), 1);
 %       function can also return the index of the max element, for more
 %       information see 'help max'. If your examples are in rows, then, you
 %       can use max(A, [], 2) to obtain the max for each row.
-%
 
 
+% Add ones to the X data matrix
+a1 = [ones(m, 1) X];
 
+% calculate second layer
+a2 = sigmoid(a1 * Theta1');
 
+% calculate output layer (with addition of bias feature)
+a3 = sigmoid([ones(m, 1) a2] * Theta2');
 
-
-
+[Y, p] = max(a3, [], 2);
 
 
 % =========================================================================
