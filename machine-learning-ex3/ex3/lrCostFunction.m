@@ -49,13 +49,13 @@ grad = zeros(size(theta));
 
 % Vectorised version of cost function.
 
-a = sum(-y.*log(sigmoid(X * theta)));
-b = sum((1 - y).*log(1 - sigmoid(X * theta)));
+% a = sum(-y.*log(sigmoid(X * theta)));
+% b = sum((1 - y).*log(1 - sigmoid(X * theta)));
+% 
+% J = (a - b) / m;
 
-J = (a - b) / m;
-
-%J = ((-y' * log(sigmoid(X * theta))) - ...
-%    (1 - y') * log(1 - sigmoid(X * theta))) / m
+J = ((-y' * log(sigmoid(X * theta))) - ...
+    (1 - y') * log(1 - sigmoid(X * theta))) / m;
 
 % Adding regularisation expression to cost function by adding all the theta
 % terms (apart from theta 0) squared * (lambda / (2*m))
