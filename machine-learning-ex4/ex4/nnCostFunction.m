@@ -62,22 +62,40 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% forward propagation
+
+% Add ones to the X data matrix
+a1 = [ones(m, 1) X];
+
+% calculate second layer
+a2 = sigmoid(a1 * Theta1');
+
+% calculate output layer (with addition of bias feature)
+a3 = sigmoid([ones(m, 1) a2] * Theta2');
+
+%[Y, p] = max(a3, [], 2)
 
 
+% Build y_vec, a matrix of m by num_labels that has a 1 in each row at the
+% corresponding index given in y. All the rest of the matrix elements
+% should be 0.
 
+y_vec = [];
 
+for i = 1:m
+      a = zeros(1, num_labels);
+      a(y(i)) = 1;
+      y_vec = cat(1, y_vec, a);
+end
 
+% Calcualte cost. You have a matrix given to you by the forward propagation
+% called a3, this is m by num labels and a y_vec matrix containing the
+% correct values. Use element wise multiplication and the logisitic
+% regression cost formula to get a vectorised calc for the error at each
+% output unit (K) for each test case (m). Sum each row and then each k
+% before dividing by to get a cost value.
 
-
-
-
-
-
-
-
-
-
-
+J = sum(sum(-y_vec.*log(a3) - (1 - y_vec).*log(1 - a3))) / m;
 
 
 % -------------------------------------------------------------
@@ -86,6 +104,5 @@ Theta2_grad = zeros(size(Theta2));
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
 
 end
