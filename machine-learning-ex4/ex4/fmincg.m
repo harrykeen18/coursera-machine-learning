@@ -117,6 +117,7 @@ while i < abs(length)                                      % while not finished
     elseif d2 > SIG*d1
       success = 1; break;                                             % success
     elseif M == 0
+      fprintf('FAILED')
       break;                                                          % failure
     end
     A = 6*(f2-f3)/z3+3*(d2+d3);                      % make cubic extrapolation
