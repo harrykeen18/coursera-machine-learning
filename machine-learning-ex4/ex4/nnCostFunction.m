@@ -66,12 +66,14 @@ Theta2_grad = zeros(size(Theta2));
 
 % Add ones to the X data matrix
 a1 = [ones(m, 1) X];
+z1 = a1 * Theta1';
 
 % calculate second layer
-a2 = sigmoid(a1 * Theta1');
+a2 = sigmoid(z1);
+z2 = [ones(m, 1) a2] * Theta2';
 
 % calculate output layer (with addition of bias feature)
-a3 = sigmoid([ones(m, 1) a2] * Theta2');
+a3 = sigmoid(z2);
 
 %[Y, p] = max(a3, [], 2)
 
@@ -97,6 +99,55 @@ end
 
 J = sum(sum(-y_vec.*log(a3) - (1 - y_vec).*log(1 - a3))) / m;
 
+% Add regularisation excluding the first rows of theta matrices.
+
+J = J + (lambda / (2 * m)) * (sum(sum(Theta1(:, 2:end).*Theta1(:, 2:end))) + ...
+                              sum(sum(Theta2(:, 2:end).*Theta2(:, 2:end))));
+
+
+% Run backpropagation
+
+T1 = zeros(size(Theta1));
+T2 = zeros(size(Theta2));
+
+for i = 1:m
+    
+    % perform forward prop on one training example.
+    
+    % a1 = ith row of X (with a bias unit prepended)
+    a1 = [1, X(i, :)];
+    
+    % get z2 =  Theta1 * a1, need to get a column vector 25 long.
+    z2 = Theta1 * a1';
+    % a2 is the sigmoid of z2
+    a2 = sigmoid(z2);
+    
+    % get z3 =  Theta2 * a2, need to get a column vector 10 long.
+    z3 = Theta2 * [1; a2];
+    % a3 is the sigmoid of z3
+    a3 = sigmoid(z3);
+    
+    % perform back prop on this
+    
+    % delta3 is the error which is the results minus expected values in y.
+    % delta3 should be (10, 1)
+    delta3 = a3 - y_vec(i, :)';
+    
+    % delta2 = Theta2' * delta2 .* sigmoidGradient(z2)
+    % (25,1) = (25, 10) * (10, 1) .* (10, 1)
+    delta2 = Theta2(:, (2:end))' * delta3 .* sigmoidGradient(z2);
+
+    % accumulate into T
+    T1 = T1 + delta2 * a1;
+    T2 = T2 + delta3 * [1; a2]';
+    
+end
+
+Theta1_grad = T1 / m;
+Theta2_grad = T2 / m;
+
+Theta1_grad(:, 2:end) =  Theta1_grad(:, 2:end) + (lambda / m) * Theta1(:, 2:end);
+Theta2_grad(:, 2:end) =  Theta2_grad(:, 2:end) + (lambda / m) * Theta2(:, 2:end);
 
 % -------------------------------------------------------------
 
