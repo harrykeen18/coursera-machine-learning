@@ -57,7 +57,7 @@ error_val   = zeros(m, 1);
 for i = 1:m
    
     % Optimise for theta given a training set of length i.
-    theta = trainLinearReg(X(1:i, :), y(1:i), lambda)
+    theta = trainLinearReg(X(1:i, :), y(1:i), lambda);
 
     % get cost over training set with this value of theta and append to
     % error train
