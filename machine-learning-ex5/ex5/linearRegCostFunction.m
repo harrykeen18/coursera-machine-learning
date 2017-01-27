@@ -28,12 +28,17 @@ J = sum((X * theta - y).^2) / (2 * m);
 J = J + sum(theta(2:end).^2) * lambda / (2 * m);
 
 % unregularised gradient.
-for i = 1:length(theta)
-    grad(i) = sum((X * theta - y) .* X(:, i)) / m;
-end
+
+% semi vectorised
+% for i = 1:length(theta)
+%     grad(i) = sum((X * theta - y) .* X(:, i)) / m;
+% end
+
+% vectorised
+grad = sum((X * theta - y) .* X) / m;
 
 % regularised gradient.
-grad(2:end) = grad(2:end) + (lambda * theta(2:end)) / m;
+grad(2:end) = grad(2:end) + (lambda * theta(2:end))' / m;
 
 % =========================================================================
 
