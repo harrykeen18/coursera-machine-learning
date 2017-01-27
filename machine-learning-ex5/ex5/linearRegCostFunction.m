@@ -19,16 +19,21 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 
+% Bias term already added to X
 
+% unregularised linear regression cost.
+J = sum((X * theta - y).^2) / (2 * m);
 
+% regulariased.
+J = J + sum(theta(2:end).^2) * lambda / (2 * m);
 
+% unregularised gradient.
+for i = 1:length(theta)
+    grad(i) = sum((X * theta - y) .* X(:, i)) / m;
+end
 
-
-
-
-
-
-
+% regularised gradient.
+grad(2:end) = grad(2:end) + (lambda * theta(2:end)) / m;
 
 % =========================================================================
 
