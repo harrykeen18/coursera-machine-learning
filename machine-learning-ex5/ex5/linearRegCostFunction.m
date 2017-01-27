@@ -31,14 +31,16 @@ J = J + sum(theta(2:end).^2) * lambda / (2 * m);
 
 % semi vectorised
 % for i = 1:length(theta)
+%     fprintf('my theta')
+%     theta
 %     grad(i) = sum((X * theta - y) .* X(:, i)) / m;
 % end
 
 % vectorised
-grad = sum((X * theta - y) .* X) / m;
+grad = sum((X * theta - y) .* X, 1) / m;
 
 % regularised gradient.
-grad(2:end) = grad(2:end) + (lambda * theta(2:end))' / m;
+grad(2:end) = grad(2:end) + (lambda * theta(2:end)') / m;
 
 % =========================================================================
 
