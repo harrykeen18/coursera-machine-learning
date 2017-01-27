@@ -54,10 +54,19 @@ error_val   = zeros(m, 1);
 % ---------------------- Sample Solution ----------------------
 
 
+for i = 1:m
+   
+    % Optimise for theta given a training set of length i.
+    theta = trainLinearReg(X(1:i, :), y(1:i), lambda)
 
-
-
-
+    % get cost over training set with this value of theta and append to
+    % error train
+    error_train(i) = linearRegCostFunction(X(1:i, :), y(1:i), theta, 0);
+    
+    % get cost over cross validation set with this value of theta and
+    % append to error val
+    error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+end
 
 % -------------------------------------------------------------
 
